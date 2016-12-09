@@ -20,14 +20,15 @@ class OSConnection:
         self.app_id = content[2]
 
         self.header = OneSignal.OSHeader.OSHeader(self.authToken)
-        self.payload = OneSignal.OSPayload.OSPayload(self.app_id)
+        self.payload = None
         self.response = OneSignal.OSResponse.OSResponse()
 
-    def createNotification(self, filters):
-        self.payload.filters = filters
-        payload = json.dumps(self.payload.__dict__, default=OSPayload.encodeFilters, indent=4, sort_keys=True)
-        print(payload)
-        req = requests.post(self.oneSignalUrl, headers=self.header.getHeader(), data=payload)
+    def createNotification(self, osPayload):
+        self.payload = osPayload
+        self.payload.app_id = self.app_id
+        jsonPayload = json.dumps(self.payload.__dict__, default=OSPayload.encodeFilters, indent=4, sort_keys=True)
+        print(jsonPayload)
+        req = requests.post(self.oneSignalUrl, headers=self.header.getHeader(), data=jsonPayload)
         print("POST: ",req.status_code, req.reason)
         self.response.response = req.json()
         return self.response

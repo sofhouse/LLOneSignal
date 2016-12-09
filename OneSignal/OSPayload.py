@@ -6,8 +6,8 @@ import OneSignal.OSOperator
 class OSPayload:
 
 
-    def __init__(self, app_id):
-        self.app_id = app_id
+    def __init__(self):
+        self.app_id = None
         self.filters = list()
         self.send_after = None
         self.delayed_option = None
