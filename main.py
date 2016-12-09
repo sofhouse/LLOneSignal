@@ -31,6 +31,16 @@ payload.delivery_time_of_day = "9:00AM"
 payload.ttl = 600
 payload.priority = 10
 payload.included_segments = ["All"]
+payload.content = {
+       "id": "Notification ID Number",
+       "tipo_notificacion": "string",
+       "titulo": "Titulo" ,
+       "subtitulo": "Subtitulo" ,
+       "fecha_entrega": "fecha",
+       "parametros": { "param1": "param1" , "param2": "param2" },
+       "estado": True
+}
+
 
 
 response = connection.createNotification(payload)
