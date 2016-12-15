@@ -15,7 +15,11 @@ class OSPayload:
         self.ttl = None
         self.priority = None
         self.included_segments = None
-        self.content = None
+        self.contents = None
+        self.headings = None
+        self.content_available = True
+        self.data = None
+        self.url = None
 
     @staticmethod
     def encodeFilters(obj):
