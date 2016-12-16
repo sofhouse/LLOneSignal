@@ -23,7 +23,6 @@ class OSConnection:
         self.payload = osPayload
         self.payload.app_id = self.app_id
         jsonPayload = json.dumps(self.payload.__dict__, default=OSPayload.encodeFilters, indent=4, sort_keys=True)
-        print(jsonPayload)
         self.response = requests.post(self.oneSignalUrl, headers=self.header.getHeader(), data=jsonPayload)
         return self.response
 
