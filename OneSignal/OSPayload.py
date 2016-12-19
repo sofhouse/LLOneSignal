@@ -1,10 +1,7 @@
-import json
-from _lzma import _encode_filter_properties
-
-import OneSignal.OSOperator
+from .OSOperator import OSOperator
+from .OSFilter import OSFilter
 
 class OSPayload:
-
 
     def __init__(self):
         self.app_id = None
@@ -17,15 +14,12 @@ class OSPayload:
         self.included_segments = None
         self.contents = None
         self.headings = None
-        self.content_available = True
-        self.data = None
         self.url = None
 
     @staticmethod
-    def encodeFilters(obj):
-        if isinstance(obj, OneSignal.OSFilter.OSFilter):
+    def encode_filters(obj):
+        if isinstance(obj, OSFilter):
             return obj.__dict__
-        elif isinstance(obj, OneSignal.OSOperator.OSOperator):
+        elif isinstance(obj, OSOperator):
             return obj.__dict__
         return obj
-
