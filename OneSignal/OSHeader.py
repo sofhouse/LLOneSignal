@@ -1,9 +1,9 @@
 class OSHeader:
 
-    def __init__(self, authToken):
+    def __init__(self, auth_token):
         self.contentType = "application/json; charset=utf-8"
-        self.authorization = "Basic " + authToken
+        self.authorization = "Basic " + auth_token
 
-    def getHeader(self):
-        header = { "Content-Type": self.contentType, "Authorization": self.authorization }
+    def get_header(self):
+        header = {"Content-Type": self.contentType, "Authorization": self.authorization}
         return header
