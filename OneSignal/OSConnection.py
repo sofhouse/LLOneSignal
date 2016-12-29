@@ -1,47 +1,50 @@
 import json
-
-import OneSignal.OSHeader
-import OneSignal.OSPayload
-import OneSignal.OSResponse
 import requests
 
-from OneSignal.OSPayload import OSPayload
+from .OSHeader import OSHeader
+from .OSPayload import OSPayload
+from .OSResponse import OSResponse
+from .OSFilter import OSFilter
+from .OSOperator import OSOperator
 
 
 class OSConnection:
 
-    def __init__(self, oneSignalUrl, authToken, app_id):
-
-        self.oneSignalUrl = oneSignalUrl
-        self.authToken = authToken
+    def __init__(self, one_signal_url, auth_token, app_id, default_url):
+        self.oneSignalUrl = one_signal_url
+        self.authToken = auth_token
         self.app_id = app_id
-        self.header = OneSignal.OSHeader.OSHeader(self.authToken)
-        self.response = OneSignal.OSResponse.OSResponse()
+        self.header = OSHeader(self.authToken)
+        self.url = default_url
+        self.response = OSResponse()
         self.payload = None
 
-    def createNotification(self, osPayload):
-        self.payload = osPayload
+    def create_notification(self, os_payload):
+        self.payload = os_payload
+        self.payload.url = self.url
         self.payload.app_id = self.app_id
-        jsonPayload = json.dumps(self.payload.__dict__, default=OSPayload.encodeFilters, indent=4, sort_keys=True)
-        self.response = requests.post(self.oneSignalUrl, headers=self.header.getHeader(), data=jsonPayload)
+        json_payload = json.dumps(self.payload.__dict__, default=OSPayload.encode_filters, indent=4, sort_keys=True)
+        self.response = requests.post(self.oneSignalUrl, headers=self.header.get_header(), data=json_payload)
         return self.response
 
-    def cancelNotification(self, notificationId):
-        self.response = requests.delete(self.oneSignalUrl + "/"+notificationId+"?app_id="+self.app_id, headers=self.header.getHeader())
+    def cancel_notification(self, notification_id):
+        self.response = requests.delete(
+            self.oneSignalUrl + "/"+notification_id+"?app_id="+self.app_id,
+            headers=self.header.get_header()
+        )
         return self.response
 
-    def createBatchNotification(self, osPayload, recipients, chunkSize):
-        responses = list()
-        chunked = [recipients[i:i + chunkSize] for i in range(0, len(recipients), chunkSize)]
-        for chunk in chunked:
-            filters = list()
-            for recipient in chunk:
-                filter = OneSignal.OSFilter.OSFilter()
-                filter.field = "tag"
-                filter.relation = "="
-                filter.value = recipient
-                filters.append(filter)
-
-            osPayload.filters = filters
-            responses.append(self.createNotification(osPayload))
-        return responses
+    def create_batch_notification(self, os_payload, recipients):
+        or_operator = OSOperator("OR")
+        filters = list()
+        for recipient in recipients:
+            os_filter = OSFilter()
+            os_filter.field = "tag"
+            os_filter.key = "email"
+            os_filter.relation = "="
+            os_filter.value = recipient
+            filters.append(os_filter)
+            filters.append(or_operator)
+        filters = filters[0:len(filters)-1]
+        os_payload.filters = filters
+        return self.create_notification(os_payload)

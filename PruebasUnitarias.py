@@ -13,7 +13,7 @@ class TestOneSignalConnection(unittest.TestCase):
         app_id = "7d02bfcd-e065-42a3-9949-21506a47f788"
         self.llave = "llave"
         self.valor = "dos"
-        self.connection = OneSignal.OSConnection.OSConnection(oneSignalUrl=oneSignalUrl, authToken=authToken, app_id=app_id)
+        self.connection = OneSignal.OSConnection.OSConnection(one_signal_url=oneSignalUrl, auth_token=authToken, app_id=app_id, default_url=None)
         self.ahora  = datetime.datetime.now()
         self.despues = self.ahora + datetime.timedelta(minutes=2)
         self.ahoraString = self.ahora.strftime('%Y-%m-%d %H:%M:%S GMT-0500')
@@ -52,7 +52,7 @@ class TestOneSignalConnection(unittest.TestCase):
             "estado": True
         }
 
-        response = self.connection.createNotification(osPayload=payload)
+        response = self.connection.create_notification(os_payload=payload)
         respPayload = response.json()
         print(respPayload)
         self.assertEqual(response.status_code, 200)
@@ -89,7 +89,7 @@ class TestOneSignalConnection(unittest.TestCase):
 
         payload.send_after = self.despuesString
 
-        response = self.connection.createNotification(osPayload=payload)
+        response = self.connection.create_notification(os_payload=payload)
         respPayload = response.json()
         print(respPayload)
         TestOneSignalConnection.notificationId = respPayload["id"]
@@ -101,7 +101,7 @@ class TestOneSignalConnection(unittest.TestCase):
 
     def test_03cancelNotification(self):
         print("test_03cancelNotification: "+self.notificationId)
-        response = self.connection.cancelNotification(notificationId=self.notificationId)
+        response = self.connection.cancel_notification(notification_id=self.notificationId)
         respPayload = response.json()
         print(response.json())
         self.assertEqual(response.status_code, 200)
@@ -137,7 +137,7 @@ class TestOneSignalConnection(unittest.TestCase):
 
         payload.send_after = self.despuesString
 
-        response = self.connection.createNotification(osPayload=payload)
+        response = self.connection.create_notification(os_payload=payload)
         respPayload = response.json()
         print(respPayload)
         TestOneSignalConnection.notificationId = respPayload["id"]
@@ -153,7 +153,7 @@ class TestOneSignalConnection(unittest.TestCase):
         payload.included_segments = ["All"]
         payload.contents = {"en": "English Message test_04notificarTodos", "es": "Spanish Message test_04notificarTodos"}
         payload.headings = {"en": "English Title test_04notificarTodos", "es": "Spanish Title test_04notificarTodos"}
-        response = self.connection.createNotification(osPayload=payload)
+        response = self.connection.create_notification(os_payload=payload)
         respPayload = response.json()
         print(respPayload)
         self.assertEqual(response.status_code, 200)
@@ -167,14 +167,14 @@ class TestOneSignalConnection(unittest.TestCase):
         payload.included_segments = ["All"]
         with open("recipients.list") as f:
             recipients = f.read().splitlines()
-        responses = self.connection.createBatchNotification(osPayload=payload, recipients=recipients, chunkSize=200)
-        for response in responses:
-            respPayload = response.json()
-            print(respPayload)
-            self.assertEqual(response.status_code, 200)
-            self.assertFalse('errors' in respPayload)
-            self.assertEqual(respPayload["id"], "")
-            self.assertNotEquals(respPayload["recipients"], 0)
+        response = self.connection.create_batch_notification(os_payload=payload, recipients=recipients)
+
+        respPayload = response.json()
+        print(respPayload)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('errors' in respPayload)
+        self.assertEqual(respPayload["id"], "")
+        self.assertNotEquals(respPayload["recipients"], 0)
 
 if __name__ == '__main__':
     unittest.main()
