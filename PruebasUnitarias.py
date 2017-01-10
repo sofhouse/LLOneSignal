@@ -13,7 +13,7 @@ class TestOneSignalConnection(unittest.TestCase):
         app_id = "7d02bfcd-e065-42a3-9949-21506a47f788"
         self.llave = "llave"
         self.valor = "dos"
-        self.connection = OneSignal.OSConnection.OSConnection(one_signal_url=oneSignalUrl, auth_token=authToken, app_id=app_id, default_url=None)
+        self.connection = OneSignal.OSConnection.OSConnection(one_signal_url=oneSignalUrl, auth_token=authToken, app_id=app_id)
         self.ahora  = datetime.datetime.now()
         self.despues = self.ahora + datetime.timedelta(minutes=2)
         self.ahoraString = self.ahora.strftime('%Y-%m-%d %H:%M:%S GMT-0500')

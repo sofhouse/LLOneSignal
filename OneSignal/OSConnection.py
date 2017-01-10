@@ -10,18 +10,16 @@ from .OSOperator import OSOperator
 
 class OSConnection:
 
-    def __init__(self, one_signal_url, auth_token, app_id, default_url):
+    def __init__(self, one_signal_url, auth_token, app_id):
         self.oneSignalUrl = one_signal_url
         self.authToken = auth_token
         self.app_id = app_id
         self.header = OSHeader(self.authToken)
-        self.url = default_url
         self.response = OSResponse()
         self.payload = None
 
     def create_notification(self, os_payload):
         self.payload = os_payload
-        self.payload.url = self.url
         self.payload.app_id = self.app_id
         json_payload = json.dumps(self.payload.__dict__, default=OSPayload.encode_filters, indent=4, sort_keys=True)
         self.response = requests.post(self.oneSignalUrl, headers=self.header.get_header(), data=json_payload)

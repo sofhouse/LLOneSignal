@@ -3,9 +3,8 @@ import OneSignal.OSConnection
 oneSignalUrl = "https://onesignal.com/api/v1/notifications"
 authToken = "NTI1NDBlMTItNzZiZS00ZDhkLTgxM2EtMjE0YzQ3YjI2NWM5"
 app_id = "7d02bfcd-e065-42a3-9949-21506a47f788"
-default_url = None
 
-connection = OneSignal.OSConnection.OSConnection(one_signal_url=oneSignalUrl, auth_token=authToken,app_id=app_id, default_url=default_url)
+connection = OneSignal.OSConnection.OSConnection(one_signal_url=oneSignalUrl, auth_token=authToken,app_id=app_id)
 
 response = OneSignal.OSResponse.OSResponse()
 payload = OneSignal.OSPayload.OSPayload()
